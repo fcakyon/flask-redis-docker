@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Flask Demo</title>
+    <meta http-equiv="refresh" content="4" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+</head>
+<body>
+<div class="jumbotron text-center">
+    <h1>Flask RQ Demo</h1>
+    <p>This is a demo project that ties Flask, Redis, RQ (Redis Queue) and Docker together and can serve as template for other projects. <br/>It's an introduction on how to use Flask with RQ and also on how to use docker-compose in a Python project.</p>
+    <p>This page auto reloads itself.</p>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Create Job</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Create a long running job and enqueue it for a worker to pick it up.</h6>
+                    <p class="card-text">This job waits for 15 seconds and returns 15.</p>
+                    <form action="add_wait_job" method="get">
+                        <td><a href="/add_wait_job/15" class="btn btn-sm btn-primary">Enqueue wait job</a></td>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h3>Job list</h3>
+            <p>Finished and failed jobs will linger around until their result_ttl or failure_ttl has expired and they will be deleted.</p>
+            <table class="table">
+                <thead><tr>
+                    <th>State</th>
+                    <th>Job Id</th>
+                    <th style="width: 30%;">Meta</th>
+                    <th>Result</th>
+                    <th>Actions</th>
+                </tr></thead>
+                <tbody>
+                    {% for job in joblist %}
+                    <tr>
+                       <td><span class="badge {{ {'finished': 'badge-success', 'started': 'badge-info', 'failed': 'badge-danger'}[job.state] | default('badge-dark') }}">{{ job.state }}</td>
+                       <td>{{ job.id }}</td>
+                       <td>
+                           <div class="progress" style="height: 24px;">
+                              <div class="progress-bar" role="progressbar" style="width: {{ job.progress.percent }}%;">{{ job.progress.iteration }}/{{ job.progress.num_iterations }}</div>
+                            </div>
+                       </td>
+                       <td>{{ job.result }}</td>
+                       <td><a href="/delete_job/{{ job.id }}" class="btn btn-sm btn-primary">Delete</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>

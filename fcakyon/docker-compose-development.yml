@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  server:
+    container_name: server
+    environment:
+      - FLASK_APP=server:create_app()
+      - FLASK_DEBUG=1
+    volumes:
+      - ./project:/app
+    command: flask run --host=0.0.0.0
+
+  worker:
+    container_name: worker
+    volumes:
+      - ./project:/app
+
+  dashboard:
+    container_name: dashboard
+
+  redis:
+    container_name: redis

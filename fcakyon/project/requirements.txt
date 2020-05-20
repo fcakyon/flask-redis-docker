@@ -1,0 +1,5 @@
+Flask==1.1.2
+redis==3.3.11
+rq==1.2.0
+rq-dashboard==0.5.1
+gunicorn==19.9.0
