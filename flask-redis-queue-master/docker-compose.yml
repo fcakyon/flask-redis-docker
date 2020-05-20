@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+
+  web:
+    build: .
+    image: web
+    container_name: web
+    ports:
+      - 5004:5000
+    command: python manage.py run -h 0.0.0.0
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - FLASK_DEBUG=1
+      - APP_SETTINGS=project.server.config.DevelopmentConfig
+    depends_on:
+      - redis
+
+  worker:
+    image: web
+    command: python manage.py run_worker
+    volumes:
+      - .:/usr/src/app
+    environment:
+      - APP_SETTINGS=project.server.config.DevelopmentConfig
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:5.0.7-alpine
+
+  dashboard:
+    build: ./project/dashboard
+    image: dashboard
+    container_name: dashboard
+    ports:
+      - 9181:9181
+    command: rq-dashboard -H redis
+    depends_on:
+      - redis

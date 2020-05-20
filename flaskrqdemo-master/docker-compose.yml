@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web:
+    build: ./app
+    image: master-image
+    ports:
+      - 5000:5000
+    command: /usr/local/bin/gunicorn -b :5000 main:app
+
+  worker:
+    image: master-image
+    depends_on:
+      - redis
+    command: rqworker --name worker --url redis://redis:6379/0
+
+# uncomment to have a another worker
+#  worker2:
+#    image: master-image
+#    depends_on:
+#      - redis
+#    command: rqworker --name worker2 --url redis://redis:6379/0
+
+  dashboard:
+    image: master-image
+    ports:
+      - 5555:5555
+    depends_on:
+      - redis
+    command: rq-dashboard --port 5555 --redis-url redis://redis:6379/0
+
+  redis:
+    image: redis
