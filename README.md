@@ -5,7 +5,7 @@ This project ties together [Flask](http://flask.pocoo.org), [Redis](http://redis
 In the web application you can launch long running jobs which are put into a RQ task queue. From there a RQ worker picks it up and executes it. During execution the job reports back some progress information and  – if execution was successful – the job result.
 
 ## Screenshot
-![screenshot](https://github.com/fcakyon/flask-redis-docker/raw/master/figures/demo.png)
+![screenshot](figure/demo.png)
 
 
 ## Quickstart
