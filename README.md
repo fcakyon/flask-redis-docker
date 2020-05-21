@@ -83,7 +83,7 @@ services:
 ```
 
 ### Reuse of images
-In order to use the same image on multiple containers we have one container build it, name it, store it, and then reuse it on the other containers. `build: :/project` tells docker-compose to build an image from the Dockerfile it finds under the ./app directory. The subsequent `image: master-image` tells it to store that image under the name *master-image*. The `image: master-image` lines on the other containers refer to that image by its name. The choice of building the image in the context of the *web* container is arbitrary, you could to this on anyone of the other containers.
+In order to use the same image on multiple containers we have one container build it, name it, store it, and then reuse it on the other containers. `build: ./project` tells docker-compose to build an image from the Dockerfile it finds under the ./app directory. The subsequent `image: master-image` tells it to store that image under the name *master-image*. The `image: master-image` lines on the other containers refer to that image by its name. The choice of building the image in the context of the *web* container is arbitrary, you could to this on anyone of the other containers.
 
 Instead of reusing the same image we could have said `build: ./project` on all of the three containers and leave out the `image: master-image` lines. This would result in three individual but identical images being build.
 
@@ -109,8 +109,8 @@ docker-compose automatically sets up local network for our service where the con
 docker-compose-development.yml is the overlay configuration file with works in conjunction with docker-compose.yml, so it only states the changes to it.
 ```yaml
 services:
-  web:
-    container_name: web
+  server:
+    container_name: server
     environment:
       - FLASK_APP=server:create_app()
       - FLASK_DEBUG=1
